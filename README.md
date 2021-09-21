@@ -99,7 +99,34 @@ the modified version is not yet released because of stability issues. To install
 
 Download and extract a precompiled binary from the [release](https://github.com/aler9/rtsp-simple-server/releases) page.
 
-Start the server:
+### Start the server:
 ```
 ./rtsp-simple-server
+```
+### Service
+Create a service with systemd to start the rtsp-simple-server automatically and manage it with systemd:
+Start on boot with systemd
+
+Systemd is the service manager used by Ubuntu, Debian and many other Linux distributions, and allows to launch rtsp-simple-server on boot.
+
+Download a release bundle from the release page, unzip it, and move the executable and configuration in the system:
+```
+sudo mv rtsp-simple-server /usr/local/bin/
+sudo mv rtsp-simple-server.yml /usr/local/etc/
+```
+Create the service:
+```
+sudo tee /etc/systemd/system/rtsp-simple-server.service >/dev/null << EOF
+[Unit]
+After=network.target
+[Service]
+ExecStart=/usr/local/bin/rtsp-simple-server /usr/local/etc/rtsp-simple-server.yml
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+Enable and start the service:
+```
+sudo systemctl enable rtsp-simple-server
+sudo systemctl start rtsp-simple-server
 ```
